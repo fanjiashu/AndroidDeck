@@ -1,0 +1,36 @@
+# Local dependencies and private Android devices
+.runtime/
+data/
+.cache/
+node_modules/
+__pycache__/
+*.py[cod]
+.DS_Store
+*.log
+.env
+.env.*
+
+# Generated applications, installers and archives
+*.app/
+*.dmg
+*.zip
+*.apk
+*.idsig
+*.qcow2
+*.img
+*.bin
+*.o
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.mobileprovision
+adbkey*
+
+# Downloaded or separately supplied artwork and service binaries
+assets/scrcpy-server
+assets/scrcpy-server.partial
+assets/AppIcons/
+assets/*.png
+assets/*.icns
+

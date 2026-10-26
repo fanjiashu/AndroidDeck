@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <title>AndroidDeck · 安卓模拟器</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="titlebar"><span class="wordmark">ANDROID<span>DECK</span></span><span class="title-hint">你的 Android 工作台</span><span class="chip">APPLE SILICON</span></header>
+  <div class="workspace">
+    <aside class="sidebar">
+      <div class="sidebar-heading">工作空间</div>
+      <button class="nav active" data-view="device"><span>▣</span>虚拟设备<span class="nav-dot"></span></button>
+      <button class="nav" data-view="apps"><span>▦</span>应用库<span id="app-count" class="count">0</span></button>
+      <button class="nav" data-view="logs"><span>≡</span>运行日志</button>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-heading">当前设备</div>
+      <div class="device-card"><div class="device-symbol">A<span>14</span></div><strong>AndroidDeck</strong><small>Android 14 · ARM64</small><span id="device-card-state" class="device-status">尚未启动</span></div>
+      <label class="select-label" for="devices">连接其他设备</label>
+      <div class="device-select"><select id="devices"><option value="">选择 ADB 设备</option></select><button id="refresh-devices" title="刷新设备">↻</button></div>
+      <button id="connect-device" class="button subtle full">连接所选设备</button>
+      <div class="memory-card"><button id="memory-settings" class="button subtle full"><span id="ram-current">运存 6 GB</span><span>⚙</span></button><small id="ram-info">启动时生效</small></div>
+      <div class="sidebar-bottom"><span class="mini-dot"></span> 本地运行 · 无需账户<small>真实 Android 运行环境</small></div>
+    </aside>
+    <main>
+      <div class="page-heading"><div><div class="eyebrow">YOUR VIRTUAL DEVICE</div><h1 id="page-title">虚拟设备</h1><p id="page-subtitle">安装 APK，打开应用，把操作交给熟悉的键盘。</p></div><button id="install" class="button primary" disabled><span>＋</span> 安装 APK</button></div>
+      <section id="device-view" class="view device-view">
+        <div class="device-panel">
+          <div class="panel-header"><span id="status" class="status"><i></i>未启动</span><span id="resolution" class="muted">720 × 1280</span><div class="header-spacer"></div><span id="fps" class="mono muted">— FPS</span><button id="start" class="button small primary">启动 Android</button><button id="stop" class="button small danger" disabled>关闭</button></div>
+          <div class="screen-area" id="screen-area">
+            <div id="empty-state" class="empty-state"><div class="android-mark">A<span>14</span></div><h2>真实的 Android，准备就绪</h2><p>启动虚拟设备，即可安装并运行 APK。<br>支持鼠标操作与自定义键盘映射。</p><button id="empty-start" class="button primary">启动 Android <span>↗</span></button><small>首次启动约需 30–90 秒</small></div>
+            <div id="screen-shell" class="screen-shell" hidden><canvas id="screen" tabindex="0" width="720" height="1280" aria-label="实时 Android 画面"></canvas><div id="overlays" class="overlays"></div></div>
+            <div id="boot-state" class="boot-state" hidden><div class="spinner"></div><strong>正在启动 Android</strong><span>正在等待系统就绪，请稍候…</span></div>
+            <div id="drop-hint" class="drop-hint" hidden>松开以安装 APK</div>
+          </div>
+          <div class="screen-toolbar"><div class="tool-group"><button data-android-key="4" title="返回 · Esc">◁</button><button data-android-key="3" title="主页 · F2">○</button><button data-android-key="187" title="最近任务 · F3">□</button></div><div class="tool-group"><button id="rotate" title="旋转屏幕">⟳</button><button id="screenshot" title="保存截图">▧</button><button id="settings" title="Android 设置">⚙</button><button id="reconnect" title="重新连接画面">↻</button></div><label class="toolbar-marker-toggle"><input id="show-mappings" type="checkbox" checked>显示键位</label><button id="fullscreen" class="fullscreen-button" title="进入 / 退出全屏 · F11">⛶</button><button id="fullscreen-memory" class="fullscreen-memory" title="运存设置">运存</button></div>
+          <div class="text-entry"><input id="text-value" placeholder="向 Android 输入英文文本…" maxlength="1000"><button id="send-text" class="button small subtle">发送文本</button></div>
+        </div>
+        <aside class="mapping-panel">
+          <div class="mapping-title"><span class="mapping-icon">⌨</span><div><h2>键盘映射</h2><p id="profile-name">默认配置</p></div><label class="switch"><input type="checkbox" id="mapping-toggle" checked><span></span></label></div>
+          <div id="mapping-help" class="info-box">点击画面获取焦点，然后用键盘操作。窗口失焦会自动释放所有长按。</div>
+          <div class="mapping-section"><div class="section-line"><span>方向摇杆</span><label class="checkbox-label"><input id="joystick-toggle" type="checkbox" checked>启用</label><label class="checkbox-label"><input id="joystick-visible" type="checkbox" checked>显示</label></div><div class="joystick-preview"><span class="key key-w">W</span><span class="key key-a">A</span><span class="key key-s">S</span><span class="key key-d">D</span><div class="joystick-center">✣</div></div><label class="range-label">摇杆半径 <span id="radius-label">9%</span><input id="radius" type="range" min="2" max="25" value="9"></label></div>
+          <div class="mapping-section"><div class="section-line"><span>按键触点</span><button id="add-binding" class="text-button">＋ 添加</button></div><div id="bindings" class="binding-list"></div></div>
+          <button id="edit-mapping" class="button full outline" disabled>编辑触点位置</button><div id="edit-tip" class="edit-tip" hidden>编辑时显示全部触点，完成后恢复隐藏状态。<br>修改会自动保存到当前应用。</div>
+          <div class="mapping-section shortcuts"><div class="section-line"><span>系统快捷键</span></div><div><span>返回</span><kbd>Esc</kbd></div><div><span>主页 / 最近任务</span><span><kbd>F2</kbd> <kbd>F3</kbd></span></div><div><span>音量 ＋ / −</span><span><kbd>F4</kbd> <kbd>F5</kbd></span></div></div>
+          <div class="profile-tools"><button id="import-profile">导入</button><button id="export-profile">导出</button><button id="reset-profile">重置</button></div>
+          <div class="mapping-footer"><span>●</span> 真正的多点触控<span class="muted">WASD 与动作键可同时按下</span></div>
+        </aside>
+      </section>
+      <section id="apps-view" class="view apps-view" hidden><div class="apps-intro"><div><h2>应用库</h2><p>安装的 APK 将显示在这里。每个应用单独保存键盘映射。</p></div><button id="refresh-apps" class="button subtle">刷新应用</button></div><div id="apps-list" class="apps-grid"></div><div class="demo-card"><div class="demo-symbol">✣</div><div><h3>触控试验场</h3><p>一个真实 Android APK，显示点击、长按和多指触控。先用它检查键盘映射。</p></div><button id="demo" class="button primary" disabled>安装并打开</button></div><p class="compatibility">运行环境为 Android 14 / ARM64。APK 需要兼容该架构与版本；依赖 Google Play 服务或反模拟器检测的应用可能无法运行。</p></section>
+      <section id="logs-view" class="view logs-view" hidden><div class="apps-intro"><div><h2>运行日志</h2><p>连接、APK 安装和运行错误。</p></div><button id="clear-logs" class="button subtle">清空</button></div><div id="logs" class="log-console"></div></section>
+      <footer><span id="footer-state">等待启动</span><span id="active-app">当前应用：默认配置</span><span>AndroidDeck 1.1</span></footer>
+    </main>
+  </div>
+  <dialog id="memory-dialog" class="memory-dialog"><h2>虚拟设备运存</h2><p>选择分配给 AndroidDeck 的内存。</p><div class="memory-options"><label><input name="ram" type="radio" value="6144" checked><strong>6 GB</strong><small>默认 · 适合当前游戏</small></label><label><input name="ram" type="radio" value="8192"><strong>8 GB</strong><small>更多运行空间</small></label></div><p id="memory-note" class="memory-note"></p><small id="host-memory"></small><div class="dialog-actions"><button id="memory-cancel" class="button subtle">取消</button><button id="memory-apply" class="button primary">保存设置</button></div></dialog>
+  <div id="toast" class="toast" hidden></div>
+  <script src="renderer.js"></script>
+</body>
+</html>
